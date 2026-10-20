@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   BUSINESS,
   FAQS,
@@ -130,6 +130,187 @@ const AREAS = [
   "Sanur",
   "Bandara Ngurah Rai",
 ];
+
+/* ---------- garis waktu cara sewa: isian ungu mengikuti scroll ---------- */
+
+interface TimelineProgress {
+  top: number;
+  track: number;
+  fill: number;
+  active: boolean[];
+}
+
+const TIMELINE_IDLE: TimelineProgress = {
+  top: 0,
+  track: 0,
+  fill: 0,
+  active: STEPS.map(() => false),
+};
+
+function sameProgress(a: TimelineProgress, b: TimelineProgress) {
+  return (
+    Math.abs(a.top - b.top) < 0.5 &&
+    Math.abs(a.track - b.track) < 0.5 &&
+    Math.abs(a.fill - b.fill) < 0.5 &&
+    a.active.length === b.active.length &&
+    a.active.every((v, i) => v === b.active[i])
+  );
+}
+
+function StepsTimeline() {
+  const listRef = useRef<HTMLOListElement | null>(null);
+  const circleRefs = useRef<Array<HTMLSpanElement | null>>([]);
+  const [reducedMotion, setReducedMotion] = useState<boolean>(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
+  const [prog, setProg] = useState<TimelineProgress>(TIMELINE_IDLE);
+
+  /* pantau perubahan preferensi gerak */
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const onChange = () => setReducedMotion(mq.matches);
+    onChange();
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+
+    const measure = () => {
+      const listRect = list.getBoundingClientRect();
+      const centers = circleRefs.current.map((el) => {
+        if (!el) return 0;
+        const r = el.getBoundingClientRect();
+        return r.top + r.height / 2 - listRect.top;
+      });
+      if (centers.length < 2) return;
+      const first = centers[0] ?? 0;
+      const lastCenter = centers[centers.length - 1] ?? first;
+      let next: TimelineProgress;
+      if (reducedMotion) {
+        /* keadaan akhir statis: langkah 1 aktif, segmen pertama terisi */
+        next = {
+          top: first,
+          track: lastCenter - first,
+          fill: Math.max((centers[1] ?? first) - first, 0),
+          active: centers.map((_, i) => i === 0),
+        };
+      } else {
+        /* patokan: garis 55% tinggi viewport; isian tumbuh dari pusat
+           lingkaran pertama sampai pusat lingkaran terakhir */
+        const markerY = window.innerHeight * 0.55 - listRect.top;
+        next = {
+          top: first,
+          track: lastCenter - first,
+          fill: Math.min(Math.max(markerY - first, 0), lastCenter - first),
+          active: centers.map((c) => c <= markerY),
+        };
+      }
+      setProg((prev) => (sameProgress(prev, next) ? prev : next));
+    };
+
+    measure();
+
+    if (reducedMotion) {
+      window.addEventListener("resize", measure);
+      return () => window.removeEventListener("resize", measure);
+    }
+
+    let raf = 0;
+    let queued = false;
+    const schedule = () => {
+      if (queued) return;
+      queued = true;
+      raf = requestAnimationFrame(() => {
+        queued = false;
+        measure();
+      });
+    };
+    schedule();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    window.addEventListener("load", schedule);
+    document.fonts?.ready.then(schedule).catch(() => {});
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      window.removeEventListener("load", schedule);
+    };
+  }, [reducedMotion]);
+
+  return (
+    <ol ref={listRef} className="relative mt-12 max-w-4xl">
+      {/* lintasan penuh + isian progres, digambar dari hasil pengukuran */}
+      {prog.track > 0 && (
+        <>
+          <span
+            aria-hidden="true"
+            className="absolute left-[21px] w-0 border-l-2 border-dashed border-ink/20 sm:left-[27px]"
+            style={{ top: prog.top, height: prog.track }}
+          />
+          <span
+            aria-hidden="true"
+            className="absolute left-[22px] w-[3px] -translate-x-1/2 bg-primary sm:left-[28px]"
+            style={{
+              top: prog.top,
+              height: prog.fill,
+              transition: "height 120ms linear",
+            }}
+          />
+        </>
+      )}
+      {STEPS.map((step, i) => {
+        const last = i === STEPS.length - 1;
+        const active = prog.active[i] ?? false;
+        return (
+          <li
+            key={step.title}
+            className={`relative flex gap-4 sm:gap-6 ${last ? "" : "pb-6"}`}
+          >
+            {/* rel garis waktu */}
+            <div className="relative w-11 shrink-0 sm:w-14">
+              <span
+                ref={(el) => {
+                  circleRefs.current[i] = el;
+                }}
+                className={`relative z-10 flex h-11 w-11 items-center justify-center rounded-full border-2 font-display text-lg font-extrabold transition-colors duration-300 sm:h-14 sm:w-14 sm:text-xl ${
+                  active
+                    ? "border-primary bg-primary text-white"
+                    : "border-ink/20 bg-white text-ink"
+                }`}
+              >
+                {i + 1}
+              </span>
+            </div>
+            {/* kartu langkah */}
+            <div className="min-w-0 flex-1 rounded-2xl bg-fog p-5 sm:p-6">
+              <div className="flex items-start justify-between gap-4">
+                <h3 className="font-display text-xl font-extrabold text-ink">
+                  {step.title}
+                </h3>
+                <p className="-rotate-2 text-right font-hand text-[22px] leading-none text-ink-muted">
+                  {step.duration}
+                </p>
+              </div>
+              <p className="mt-2 leading-relaxed text-ink-muted">{step.text}</p>
+              <p className="mt-3 text-sm text-ink-muted">
+                <Marker>
+                  <span className="font-bold text-ink">Anda:</span>
+                </Marker>{" "}
+                {step.yourPart}
+              </p>
+            </div>
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
 
 /* ---------- halaman situs ---------- */
 
@@ -444,60 +625,7 @@ export function Landing({
             Tidak ada formulir panjang, tidak ada antre di garasi.
           </p>
         </div>
-        <ol className="mt-12 max-w-4xl">
-          {STEPS.map((step, i) => {
-            const last = i === STEPS.length - 1;
-            return (
-              <li
-                key={step.title}
-                className={`relative flex gap-4 sm:gap-6 ${last ? "" : "pb-6"}`}
-              >
-                {/* rel garis waktu */}
-                <div className="relative w-11 shrink-0 sm:w-14">
-                  {!last && (
-                    <span
-                      aria-hidden="true"
-                      className={
-                        i === 0
-                          ? "absolute bottom-0 left-1/2 top-11 w-[3px] -translate-x-1/2 bg-primary sm:top-14"
-                          : "absolute bottom-0 left-1/2 top-11 w-0 -translate-x-1/2 border-l-2 border-dashed border-ink/20 sm:top-14"
-                      }
-                    />
-                  )}
-                  <span
-                    className={`relative z-10 flex h-11 w-11 items-center justify-center rounded-full font-display text-lg font-extrabold sm:h-14 sm:w-14 sm:text-xl ${
-                      i === 0
-                        ? "bg-primary text-white"
-                        : "border-2 border-ink/20 bg-white text-ink"
-                    }`}
-                  >
-                    {i + 1}
-                  </span>
-                </div>
-                {/* kartu langkah */}
-                <div className="min-w-0 flex-1 rounded-2xl bg-fog p-5 sm:p-6">
-                  <div className="flex items-start justify-between gap-4">
-                    <h3 className="font-display text-xl font-extrabold text-ink">
-                      {step.title}
-                    </h3>
-                    <p className="-rotate-2 text-right font-hand text-[22px] leading-none text-ink-muted">
-                      {step.duration}
-                    </p>
-                  </div>
-                  <p className="mt-2 leading-relaxed text-ink-muted">
-                    {step.text}
-                  </p>
-                  <p className="mt-3 text-sm text-ink-muted">
-                    <Marker>
-                      <span className="font-bold text-ink">Anda:</span>
-                    </Marker>{" "}
-                    {step.yourPart}
-                  </p>
-                </div>
-              </li>
-            );
-          })}
-        </ol>
+        <StepsTimeline />
       </section>
 
       {/* ================= TESTIMONI ================= */}
