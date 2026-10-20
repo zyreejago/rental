@@ -112,3 +112,22 @@ export function waLink(phone: string, text: string): string {
   if (digits.startsWith("0")) digits = `62${digits.slice(1)}`;
   return `https://wa.me/${digits}?text=${encodeURIComponent(text)}`;
 }
+
+// Foto sampul preset per kategori kendaraan (Unsplash, URL terverifikasi).
+const COVER_URLS: Record<string, string> = {
+  skuter:
+    "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=1200&auto=format&fit=crop",
+  city: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=1200&auto=format&fit=crop",
+  mpv: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?q=80&w=1200&auto=format&fit=crop",
+  suv: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1200&auto=format&fit=crop",
+  premium:
+    "https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1200&auto=format&fit=crop",
+};
+
+const FALLBACK_COVER =
+  "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=1200&auto=format&fit=crop";
+
+export function vehicleImage(v: VehicleData): string {
+  if (v.cover === "custom" && v.imageUrl) return v.imageUrl;
+  return COVER_URLS[v.cover] ?? COVER_URLS[v.category] ?? FALLBACK_COVER;
+}

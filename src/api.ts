@@ -151,7 +151,7 @@ interface Store {
   nextBookingId: number;
 }
 
-const STORAGE_KEY = "baliride-rental:store:v1";
+const STORAGE_KEY = "zeerental:store:v1";
 const ACTIVE_STATUSES: readonly string[] = [
   "menunggu",
   "terkonfirmasi",
@@ -161,13 +161,13 @@ const ACTIVE_STATUSES: readonly string[] = [
 function seedStore(): Store {
   return {
     settings: {
-      businessName: "BaliRide Rental",
+      businessName: "ZeeRental",
       tagline:
-        "Armada terawat, harga transparan, dan antar jemput ke seluruh Bali. Dari skuter lincah untuk Canggu sampai MPV lega untuk keluarga.",
+        "Mobil dan motor terawat, harga final tanpa biaya siluman, diantar ke hotel, villa, atau bandara di seluruh Bali.",
       whatsapp: "081234567890",
-      email: "halo@baliride.id",
-      baseLocation: "Jl. Raya Canggu No. 88, Badung",
-      serviceAreas: "Ubud, Canggu, Uluwatu, Bali Timur",
+      email: "halo@zeerental.id",
+      baseLocation: "Jl. Gunung Sanghyang No. 88, Denpasar",
+      serviceAreas: "Denpasar, Ubud, Canggu, Seminyak, Uluwatu, Sanur, Bandara Ngurah Rai",
     },
     vehicles: [
       {

@@ -1,7 +1,6 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "./api";
-import { vehicleImage } from "./Landing";
 import {
 BOOKING_STATUS,
 CATEGORIES,
@@ -13,15 +12,16 @@ rp,
 rpShort,
 todayStr,
 waLink,
+vehicleImage,
 type Booking,
 type Settings,
 type Vehicle,
 } from "./lib";
 
 const inputCls =
-  "w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3.5 py-2.5 text-sm text-[var(--text)] outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/25";
+  "w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3.5 py-2.5 text-sm text-[var(--text)] outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/25";
 const labelCls =
-  "mb-1.5 block text-xs font-bold uppercase tracking-wider text-[var(--dim)]";
+  "mb-1.5 block font-mono text-[11px] font-semibold uppercase tracking-wider text-[var(--dim)]";
 
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -37,7 +37,7 @@ function BookingBadge({ status }: { status: string }) {
   if (!s) return null;
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded px-2.5 py-0.5 text-[11px] font-bold ${s.badge}`}
+      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-bold ${s.badge}`}
     >
       <span className={`h-1.5 w-1.5 rounded-full ${s.dot}`} />
       {s.label}
@@ -57,9 +57,9 @@ export function Manager({ settings }: { settings: Settings | null }) {
     { id: "pengaturan", label: "Pengaturan" },
   ];
   return (
-    <div className="mx-auto max-w-6xl px-4 pb-16 pt-20 sm:px-8">
+    <div className="mx-auto max-w-6xl px-4 pb-16 pt-24 sm:px-8">
       <div
-        className="sticky top-14 z-30 -mx-4 overflow-x-auto border-b border-[var(--border)] bg-[var(--bg)]/95 px-4 backdrop-blur sm:-mx-8 sm:px-8"
+        className="sticky top-16 z-30 -mx-4 overflow-x-auto border-b border-[var(--border)] bg-[var(--bg)]/95 px-4 backdrop-blur sm:-mx-8 sm:px-8"
         role="tablist"
         aria-label="Menu pengelola"
       >
@@ -139,7 +139,7 @@ function DashboardView({ goTab }: { goTab: (t: Tab) => void }) {
             {stats.map((s) => (
               <div
                 key={s.label}
-                className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-5"
+                className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5"
               >
                 <p className="text-[11px] font-bold uppercase tracking-wider text-[var(--dim)]">
                   {s.label}
@@ -153,7 +153,7 @@ function DashboardView({ goTab }: { goTab: (t: Tab) => void }) {
           </div>
 
           <div className="mt-8 grid gap-6 lg:grid-cols-2">
-            <section className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-5 sm:p-6">
+            <section className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 sm:p-6">
               <div className="flex items-center justify-between">
                 <h3 className="text-base font-bold text-[var(--text)]">
                   Serah terima hari ini
@@ -174,7 +174,7 @@ function DashboardView({ goTab }: { goTab: (t: Tab) => void }) {
                   {d.todayBookings.map((b) => (
                     <li
                       key={b.id}
-                      className="flex items-center justify-between gap-3 rounded-md bg-[var(--surface-2)] px-4 py-3"
+                      className="flex items-center justify-between gap-3 rounded-xl bg-[var(--surface-2)] px-4 py-3"
                     >
                       <div className="min-w-0">
                         <p className="truncate text-sm font-bold text-[var(--text)]">
@@ -193,7 +193,7 @@ function DashboardView({ goTab }: { goTab: (t: Tab) => void }) {
               )}
             </section>
 
-            <section className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-5 sm:p-6">
+            <section className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 sm:p-6">
               <div className="flex items-center justify-between">
                 <h3 className="text-base font-bold text-[var(--text)]">
                   Booking berikutnya
@@ -214,7 +214,7 @@ function DashboardView({ goTab }: { goTab: (t: Tab) => void }) {
                   {d.upcomingBookings.map((b) => (
                     <li
                       key={b.id}
-                      className="flex items-center justify-between gap-3 rounded-md bg-[var(--surface-2)] px-4 py-3"
+                      className="flex items-center justify-between gap-3 rounded-xl bg-[var(--surface-2)] px-4 py-3"
                     >
                       <div className="min-w-0">
                         <p className="truncate text-sm font-bold text-[var(--text)]">
@@ -442,7 +442,7 @@ function FleetView() {
             setEditing(null);
             setFormError(null);
           }}
-          className="rounded bg-[var(--accent)] px-5 py-2.5 text-sm font-bold text-white"
+          className="rounded-full bg-[var(--accent)] hover:bg-[var(--accent-hover)] px-5 py-2.5 text-sm font-bold text-white"
         >
           + Tambah kendaraan
         </button>
@@ -461,9 +461,9 @@ function FleetView() {
             key={id}
             onClick={() => setFilter(id)}
             aria-pressed={filter === id}
-            className={`rounded px-4 py-1.5 text-xs font-bold ${
+            className={`rounded-full px-4 py-1.5 text-xs font-bold ${
               filter === id
-                ? "bg-[var(--accent)] text-white"
+                ? "bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white"
                 : "border border-[var(--border)] bg-[var(--surface)] text-[var(--dim)]"
             }`}
           >
@@ -497,7 +497,7 @@ function FleetView() {
         <p className="mt-8 text-sm text-[var(--dim)]">Memuat armada…</p>
       )}
       {fleet.data && vehicles.length === 0 && !showForm && (
-        <div className="mt-8 rounded-lg border border-dashed border-[var(--border)] bg-[var(--surface)] px-6 py-12 text-center">
+        <div className="mt-8 rounded-2xl border border-dashed border-[var(--border)] bg-[var(--surface)] px-6 py-12 text-center">
           <p className="font-display text-2xl font-semibold text-[var(--text)]">
             Belum ada kendaraan
           </p>
@@ -517,7 +517,7 @@ function FleetView() {
             return (
               <article
                 key={v.id}
-                className="overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--surface)]"
+                className="overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)]"
               >
                 <div className="relative aspect-[16/9]">
                   <img
@@ -527,7 +527,7 @@ function FleetView() {
                     className="h-full w-full object-cover"
                   />
                   {v.featured && (
-                    <span className="absolute right-3 top-3 rounded bg-[var(--text)] px-3 py-1 text-[11px] font-bold text-[var(--bg)]">
+                    <span className="absolute right-3 top-3 rounded-full bg-[var(--text)] px-3 py-1 text-[11px] font-bold text-[var(--bg)]">
                       Unggulan
                     </span>
                   )}
@@ -546,7 +546,7 @@ function FleetView() {
                     </div>
                     {st && (
                       <span
-                        className={`shrink-0 rounded px-2.5 py-0.5 text-[11px] font-bold ${st.badge}`}
+                        className={`shrink-0 rounded-full px-2.5 py-0.5 text-[11px] font-bold ${st.badge}`}
                       >
                         {st.label}
                       </span>
@@ -567,7 +567,7 @@ function FleetView() {
                         setFormError(null);
                       }}
                       aria-label={`Ubah ${v.name}`}
-                      className="flex-1 rounded border border-[var(--border)] py-2 text-xs font-bold text-[var(--text)]"
+                      className="flex-1 rounded-full border border-[var(--border)] py-2 text-xs font-bold text-[var(--text)]"
                     >
                       Ubah
                     </button>
@@ -577,7 +577,7 @@ function FleetView() {
                         setDeleteError(null);
                       }}
                       aria-label={`Hapus ${v.name}`}
-                      className="flex-1 rounded border border-rose-300 py-2 text-xs font-bold text-[var(--danger)]"
+                      className="flex-1 rounded-full border border-rose-300 py-2 text-xs font-bold text-[var(--danger)]"
                     >
                       Hapus
                     </button>
@@ -589,7 +589,7 @@ function FleetView() {
         </div>
       )}
       {fleet.data && vehicles.length > 0 && shown.length === 0 && (
-        <p className="mt-8 rounded-md bg-[var(--surface)] px-6 py-10 text-center text-sm text-[var(--dim)]">
+        <p className="mt-8 rounded-xl bg-[var(--surface)] px-6 py-10 text-center text-sm text-[var(--dim)]">
           Tidak ada kendaraan dengan status ini.
         </p>
       )}
@@ -600,7 +600,7 @@ function FleetView() {
           role="alertdialog"
           aria-label={`Konfirmasi hapus ${confirmDelete.name}`}
         >
-          <div className="w-full max-w-md rounded-lg bg-[var(--surface)] p-6 shadow-2xl">
+          <div className="w-full max-w-md rounded-2xl bg-[var(--surface)] p-6 shadow-2xl">
             <h3 className="font-display text-xl font-semibold text-[var(--text)]">
               Hapus {confirmDelete.name}?
             </h3>
@@ -608,21 +608,21 @@ function FleetView() {
               Kendaraan tanpa riwayat booking akan dihapus permanen.
             </p>
             {deleteError && (
-              <p className="mt-3 rounded-md bg-rose-50 px-3 py-2 text-sm text-[var(--danger)]">
+              <p className="mt-3 rounded-xl bg-rose-50 px-3 py-2 text-sm text-[var(--danger)]">
                 {deleteError}
               </p>
             )}
             <div className="mt-5 flex gap-2">
               <button
                 onClick={() => setConfirmDelete(null)}
-                className="flex-1 rounded border border-[var(--border)] py-2.5 text-sm font-bold text-[var(--text)]"
+                className="flex-1 rounded-full border border-[var(--border)] py-2.5 text-sm font-bold text-[var(--text)]"
               >
                 Batal
               </button>
               <button
                 onClick={() => deleteMut.mutate(confirmDelete.id)}
                 disabled={deleteMut.isPending}
-                className="flex-1 rounded bg-[var(--danger)] py-2.5 text-sm font-bold text-white disabled:opacity-60"
+                className="flex-1 rounded-full bg-[var(--danger)] py-2.5 text-sm font-bold text-white disabled:opacity-60"
               >
                 {deleteMut.isPending ? "Menghapus…" : "Ya, hapus"}
               </button>
@@ -661,7 +661,7 @@ function VehicleForm({
 
   return (
     <form
-      className="mt-6 rounded-lg border border-[var(--accent)]/50 bg-[var(--surface)] p-5 sm:p-6"
+      className="mt-6 rounded-2xl border border-[var(--accent)]/50 bg-[var(--surface)] p-5 sm:p-6"
       onSubmit={(e) => {
         e.preventDefault();
         if (!localError) onSubmit(f);
@@ -743,12 +743,12 @@ function VehicleForm({
           aria-label="Tampilkan sebagai unggulan di landing page"
           checked={f.featured}
           onChange={(e) => setF((p) => ({ ...p, featured: e.target.checked }))}
-          className="h-4 w-4 accent-[#d9480f]"
+          className="h-4 w-4 accent-[#4b3bff]"
         />
         Tampilkan sebagai unggulan di landing page
       </label>
       {(localError || error) && (
-        <p className="mt-3 rounded-md bg-rose-50 px-3 py-2 text-sm text-[var(--danger)]">
+        <p className="mt-3 rounded-xl bg-rose-50 px-3 py-2 text-sm text-[var(--danger)]">
           {error ?? localError}
         </p>
       )}
@@ -756,14 +756,14 @@ function VehicleForm({
         <button
           type="submit"
           disabled={saving || !!localError}
-          className="rounded bg-[var(--accent)] px-6 py-2.5 text-sm font-bold text-white disabled:opacity-60"
+          className="rounded-full bg-[var(--accent)] hover:bg-[var(--accent-hover)] px-6 py-2.5 text-sm font-bold text-white disabled:opacity-60"
         >
           {saving ? "Menyimpan…" : "Simpan kendaraan"}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="rounded border border-[var(--border)] px-6 py-2.5 text-sm font-bold text-[var(--text)]"
+          className="rounded-full border border-[var(--border)] px-6 py-2.5 text-sm font-bold text-[var(--text)]"
         >
           Batal
         </button>
@@ -908,13 +908,13 @@ function BookingsView() {
             setServerError(null);
           }}
           disabled={vehicles.length === 0}
-          className="rounded bg-[var(--accent)] px-5 py-2.5 text-sm font-bold text-white disabled:opacity-50"
+          className="rounded-full bg-[var(--accent)] hover:bg-[var(--accent-hover)] px-5 py-2.5 text-sm font-bold text-white disabled:opacity-50"
         >
           + Booking baru
         </button>
       </div>
       {vehicles.length === 0 && (
-        <p className="mt-3 rounded-md bg-amber-50 px-4 py-3 text-sm text-amber-900">
+        <p className="mt-3 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-900">
           Tambahkan kendaraan dulu di tab Armada sebelum membuat booking.
         </p>
       )}
@@ -926,9 +926,9 @@ function BookingsView() {
               key={s}
               onClick={() => setStatusFilter(s)}
               aria-pressed={statusFilter === s}
-              className={`rounded px-3.5 py-1.5 text-xs font-bold ${
+              className={`rounded-full px-3.5 py-1.5 text-xs font-bold ${
                 statusFilter === s
-                  ? "bg-[var(--accent)] text-white"
+                  ? "bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white"
                   : "border border-[var(--border)] bg-[var(--surface)] text-[var(--dim)]"
               }`}
             >
@@ -986,7 +986,7 @@ function BookingsView() {
         <p className="mt-8 text-sm text-[var(--dim)]">Memuat booking…</p>
       )}
       {bookings.data && list.length === 0 && !showForm && (
-        <div className="mt-8 rounded-lg border border-dashed border-[var(--border)] bg-[var(--surface)] px-6 py-12 text-center">
+        <div className="mt-8 rounded-2xl border border-dashed border-[var(--border)] bg-[var(--surface)] px-6 py-12 text-center">
           <p className="font-display text-2xl font-semibold text-[var(--text)]">
             Belum ada booking
           </p>
@@ -1001,17 +1001,17 @@ function BookingsView() {
           {list.map((b) => (
             <article
               key={b.id}
-              className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-4 sm:p-5"
+              className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 sm:p-5"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
                   <p className="text-base font-bold text-[var(--text)]">
                     {b.customerName}
-                    <span className="ml-2 rounded bg-[var(--surface-2)] px-2 py-0.5 text-[11px] font-bold text-[var(--dim)]">
+                    <span className="ml-2 rounded-full bg-[var(--surface-2)] px-2 py-0.5 text-[11px] font-bold text-[var(--dim)]">
                       {b.nationality}
                     </span>
                     {b.withDriver && (
-                      <span className="ml-1.5 rounded bg-[var(--surface-2)] px-2 py-0.5 text-[11px] font-bold text-[var(--dim)]">
+                      <span className="ml-1.5 rounded-full bg-[var(--surface-2)] px-2 py-0.5 text-[11px] font-bold text-[var(--dim)]">
                         Dengan sopir
                       </span>
                     )}
@@ -1034,7 +1034,7 @@ function BookingsView() {
               <div className="mt-3 flex flex-wrap gap-2">
                 <select
                   aria-label={`Ubah status booking ${b.customerName}`}
-                  className="rounded border border-[var(--border)] bg-[var(--surface)] px-3 py-1.5 text-xs font-bold text-[var(--text)]"
+                  className="rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-1.5 text-xs font-bold text-[var(--text)]"
                   value={b.status}
                   onChange={(e) =>
                     saveMut.mutate({
@@ -1056,7 +1056,7 @@ function BookingsView() {
                     target="_blank"
                     rel="noreferrer"
                     aria-label={`Chat WhatsApp ${b.customerName}`}
-                    className="rounded border border-emerald-300 px-3.5 py-1.5 text-xs font-bold text-emerald-800"
+                    className="rounded-full border border-emerald-300 px-3.5 py-1.5 text-xs font-bold text-emerald-800"
                   >
                     Chat penyewa
                   </a>
@@ -1068,14 +1068,14 @@ function BookingsView() {
                     setServerError(null);
                   }}
                   aria-label={`Ubah booking ${b.customerName}`}
-                  className="rounded border border-[var(--border)] px-3.5 py-1.5 text-xs font-bold text-[var(--text)]"
+                  className="rounded-full border border-[var(--border)] px-3.5 py-1.5 text-xs font-bold text-[var(--text)]"
                 >
                   Ubah
                 </button>
                 <button
                   onClick={() => setConfirmDelete(b)}
                   aria-label={`Hapus booking ${b.customerName}`}
-                  className="rounded border border-rose-300 px-3.5 py-1.5 text-xs font-bold text-[var(--danger)]"
+                  className="rounded-full border border-rose-300 px-3.5 py-1.5 text-xs font-bold text-[var(--danger)]"
                 >
                   Hapus
                 </button>
@@ -1091,7 +1091,7 @@ function BookingsView() {
           role="alertdialog"
           aria-label={`Konfirmasi hapus booking ${confirmDelete.customerName}`}
         >
-          <div className="w-full max-w-md rounded-lg bg-[var(--surface)] p-6 shadow-2xl">
+          <div className="w-full max-w-md rounded-2xl bg-[var(--surface)] p-6 shadow-2xl">
             <h3 className="font-display text-xl font-semibold text-[var(--text)]">
               Hapus booking ini?
             </h3>
@@ -1103,14 +1103,14 @@ function BookingsView() {
             <div className="mt-5 flex gap-2">
               <button
                 onClick={() => setConfirmDelete(null)}
-                className="flex-1 rounded border border-[var(--border)] py-2.5 text-sm font-bold text-[var(--text)]"
+                className="flex-1 rounded-full border border-[var(--border)] py-2.5 text-sm font-bold text-[var(--text)]"
               >
                 Batal
               </button>
               <button
                 onClick={() => deleteMut.mutate(confirmDelete.id)}
                 disabled={deleteMut.isPending}
-                className="flex-1 rounded bg-[var(--danger)] py-2.5 text-sm font-bold text-white disabled:opacity-60"
+                className="flex-1 rounded-full bg-[var(--danger)] py-2.5 text-sm font-bold text-white disabled:opacity-60"
               >
                 {deleteMut.isPending ? "Menghapus…" : "Ya, hapus"}
               </button>
@@ -1171,7 +1171,7 @@ function BookingForm({
 
   return (
     <form
-      className="mt-6 rounded-lg border border-[var(--accent)]/50 bg-[var(--surface)] p-5 sm:p-6"
+      className="mt-6 rounded-2xl border border-[var(--accent)]/50 bg-[var(--surface)] p-5 sm:p-6"
       onSubmit={(e) => {
         e.preventDefault();
         if (!localError) onSubmit(f);
@@ -1237,12 +1237,12 @@ function BookingForm({
           aria-label="Sewa dengan sopir"
           checked={f.withDriver}
           onChange={(e) => setF((p) => ({ ...p, withDriver: e.target.checked }))}
-          className="h-4 w-4 accent-[#d9480f]"
+          className="h-4 w-4 accent-[#4b3bff]"
         />
         Sewa dengan sopir
       </label>
       {days > 0 && vehicle && (
-        <p className="mt-3 rounded-md bg-[var(--accent-soft)] px-3 py-2 text-sm text-[var(--text)]">
+        <p className="mt-3 rounded-xl bg-[var(--accent-soft)] px-3 py-2 text-sm text-[var(--text)]">
           Pratinjau: {days} hari × {rp(vehicle.dailyRate)} ={" "}
           <strong>{rp(suggestedTotal)}</strong> · deposit {f.nationality}{" "}
           {rp(suggestedDeposit)}
@@ -1252,7 +1252,7 @@ function BookingForm({
         </p>
       )}
       {(localError || serverError) && (
-        <p className="mt-3 rounded-md bg-rose-50 px-3 py-2 text-sm text-[var(--danger)]">
+        <p className="mt-3 rounded-xl bg-rose-50 px-3 py-2 text-sm text-[var(--danger)]">
           {serverError ?? localError}
         </p>
       )}
@@ -1260,14 +1260,14 @@ function BookingForm({
         <button
           type="submit"
           disabled={saving || !!localError}
-          className="rounded bg-[var(--accent)] px-6 py-2.5 text-sm font-bold text-white disabled:opacity-60"
+          className="rounded-full bg-[var(--accent)] hover:bg-[var(--accent-hover)] px-6 py-2.5 text-sm font-bold text-white disabled:opacity-60"
         >
           {saving ? "Menyimpan…" : "Simpan booking"}
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="rounded border border-[var(--border)] px-6 py-2.5 text-sm font-bold text-[var(--text)]"
+          className="rounded-full border border-[var(--border)] px-6 py-2.5 text-sm font-bold text-[var(--text)]"
         >
           Batal
         </button>
@@ -1317,7 +1317,7 @@ function CalendarView() {
           <button
             onClick={() => move(-1)}
             aria-label="Bulan sebelumnya"
-            className="rounded border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-sm font-bold text-[var(--text)]"
+            className="rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-sm font-bold text-[var(--text)]"
           >
             ← Prev
           </button>
@@ -1326,14 +1326,14 @@ function CalendarView() {
               setCursor({ y: now.getFullYear(), m: now.getMonth() });
               setSelected(null);
             }}
-            className="rounded border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-sm font-bold text-[var(--text)]"
+            className="rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-sm font-bold text-[var(--text)]"
           >
             Hari ini
           </button>
           <button
             onClick={() => move(1)}
             aria-label="Bulan berikutnya"
-            className="rounded border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-sm font-bold text-[var(--text)]"
+            className="rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-sm font-bold text-[var(--text)]"
           >
             Next →
           </button>
@@ -1351,7 +1351,7 @@ function CalendarView() {
           ))}
       </div>
 
-      <div className="mt-4 overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--surface)]">
+      <div className="mt-4 overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)]">
         <div className="grid grid-cols-7 border-b border-[var(--border)] bg-[var(--surface-2)] text-center text-[11px] font-bold uppercase tracking-wider text-[var(--dim)]">
           {["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"].map((d) => (
             <div key={d} className="py-2.5">{d}</div>
@@ -1393,7 +1393,7 @@ function CalendarView() {
                         key={b.id}
                         onClick={() => setSelected(b)}
                         aria-label={`Booking ${b.customerName}, ${b.vehicleName}, ${fmtDate(b.startDate)} sampai ${fmtDate(b.endDate)}`}
-                        className={`block w-full truncate rounded-md px-1.5 py-0.5 text-left text-[10px] font-bold ${s?.cal ?? ""}`}
+                        className={`block w-full truncate rounded-xl px-1.5 py-0.5 text-left text-[10px] font-bold ${s?.cal ?? ""}`}
                       >
                         {b.vehicleName} — {b.customerName}
                       </button>
@@ -1415,7 +1415,7 @@ function CalendarView() {
       )}
 
       {selected && (
-        <div className="mt-5 rounded-lg border border-[var(--border)] bg-[var(--surface)] p-5">
+        <div className="mt-5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <p className="text-base font-bold text-[var(--text)]">
@@ -1438,7 +1438,7 @@ function CalendarView() {
               <button
                 onClick={() => setSelected(null)}
                 aria-label="Tutup detail booking"
-                className="rounded border border-[var(--border)] px-3 py-1 text-xs font-bold text-[var(--text)]"
+                className="rounded-full border border-[var(--border)] px-3 py-1 text-xs font-bold text-[var(--text)]"
               >
                 Tutup
               </button>
@@ -1498,7 +1498,7 @@ function SettingsForm({ settings }: { settings: Settings | null }) {
         calon penyewa.
       </p>
       <form
-        className="mt-6 space-y-4 rounded-lg border border-[var(--border)] bg-[var(--surface)] p-5 sm:p-6"
+        className="mt-6 space-y-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 sm:p-6"
         onSubmit={(e) => {
           e.preventDefault();
           saveMut.mutate();
@@ -1523,30 +1523,30 @@ function SettingsForm({ settings }: { settings: Settings | null }) {
           <input aria-label="Area layanan, pisahkan dengan koma" className={inputCls} value={f.serviceAreas} onChange={set("serviceAreas")} placeholder="Denpasar, Canggu, Seminyak, Ubud, Uluwatu, Bandara Ngurah Rai" />
         </Field>
         {error && (
-          <p className="rounded-md bg-rose-50 px-3 py-2 text-sm text-[var(--danger)]">{error}</p>
+          <p className="rounded-xl bg-rose-50 px-3 py-2 text-sm text-[var(--danger)]">{error}</p>
         )}
         {saved && (
-          <p className="rounded-md bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-800">
+          <p className="rounded-xl bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-800">
             Pengaturan tersimpan dan sudah tampil di landing page.
           </p>
         )}
         <button
           type="submit"
           disabled={saveMut.isPending}
-          className="rounded bg-[var(--accent)] px-6 py-2.5 text-sm font-bold text-white disabled:opacity-60"
+          className="rounded-full bg-[var(--accent)] hover:bg-[var(--accent-hover)] px-6 py-2.5 text-sm font-bold text-white disabled:opacity-60"
         >
           {saveMut.isPending ? "Menyimpan…" : "Simpan pengaturan"}
         </button>
       </form>
 
-      <div className="mt-6 rounded-lg border border-dashed border-[var(--border)] bg-[var(--surface)] p-5 sm:p-6">
+      <div className="mt-6 rounded-2xl border border-dashed border-[var(--border)] bg-[var(--surface)] p-5 sm:p-6">
         <h3 className="text-sm font-bold text-[var(--text)]">Data demo</h3>
         <p className="mt-1 text-sm text-[var(--dim)]">
           Versi standalone ini menyimpan data di browser (localStorage).
           Kembalikan armada, booking, dan pengaturan ke contoh awal kapan pun.
         </p>
         {resetDone && (
-          <p className="mt-3 rounded-md bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-800">
+          <p className="mt-3 rounded-xl bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-800">
             Data sudah dikembalikan ke contoh awal.
           </p>
         )}
@@ -1554,7 +1554,7 @@ function SettingsForm({ settings }: { settings: Settings | null }) {
           type="button"
           onClick={() => resetMut.mutate()}
           disabled={resetMut.isPending}
-          className="mt-4 rounded border border-[var(--border)] px-5 py-2.5 text-sm font-bold text-[var(--text)] disabled:opacity-60"
+          className="mt-4 rounded-full border border-[var(--border)] px-5 py-2.5 text-sm font-bold text-[var(--text)] disabled:opacity-60"
         >
           {resetMut.isPending ? "Mengembalikan…" : "Reset ke data contoh"}
         </button>
