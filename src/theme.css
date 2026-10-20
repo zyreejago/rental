@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+@import "tailwindcss-safe-area";
+
+@theme {
+  --text-xs: 12px;
+  --text-xs--line-height: 16px;
+  --text-sm: 14px;
+  --text-sm--line-height: 20px;
+  --text-base: 16px;
+  --text-base--line-height: 24px;
+  --text-lg: 18px;
+  --text-lg--line-height: 28px;
+  --text-xl: 20px;
+  --text-xl--line-height: 28px;
+  --text-2xl: 24px;
+  --text-2xl--line-height: 32px;
+  --text-3xl: 30px;
+  --text-3xl--line-height: 36px;
+  --text-4xl: 36px;
+  --text-4xl--line-height: 40px;
+  --text-5xl: 48px;
+  --text-5xl--line-height: 52px;
+  --font-display: "Archivo", "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+:root {
+  color-scheme: light;
+  --bg: #f4f4f1;
+  --surface: #ffffff;
+  --surface-2: #e9eae5;
+  --text: #161814;
+  --dim: #5d6157;
+  --border: #d7d8d0;
+  --accent: #d9480f;
+  --accent-soft: #fbe9df;
+  --ink: #161814;
+  --ink-text: #f2f2ed;
+  --ink-dim: #a9aca0;
+  --danger: #b3382e;
+  --radius: 8px;
+  --space-surface: var(--surface);
+  --space-surface-alt: var(--surface-2);
+  --space-muted: var(--dim);
+  --space-border: var(--border);
+  --space-accent: var(--accent);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #101210;
+    --surface: #181a17;
+    --surface-2: #21241f;
+    --text: #eceee8;
+    --dim: #9ba195;
+    --border: #2d302a;
+    --accent: #f0662f;
+    --accent-soft: #332016;
+    --ink: #0a0b0a;
+    --ink-text: #f2f2ed;
+    --ink-dim: #a9aca0;
+    --danger: #e07a6d;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.015em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
