@@ -152,7 +152,7 @@ interface Store {
   nextBookingId: number;
 }
 
-const STORAGE_KEY = "zeerental:store:v2";
+const STORAGE_KEY = "zeerental:store:v3";
 const ACTIVE_STATUSES: readonly string[] = [
   "menunggu",
   "terkonfirmasi",
