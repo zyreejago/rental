@@ -65,6 +65,48 @@ function Scribble({
   );
 }
 
+function CircledNote({
+  text,
+  className = "",
+}: {
+  text: string;
+  className?: string;
+}) {
+  return (
+    <div aria-hidden="true" className={`select-none ${className}`}>
+      <div className="animate-bob inline-block">
+        <span className="relative inline-block -rotate-2 px-7 py-3.5">
+          <svg
+            className="absolute inset-0 h-full w-full overflow-visible"
+            viewBox="0 0 320 110"
+            preserveAspectRatio="none"
+            fill="none"
+          >
+            <path
+              d="M160 8 C 235 4, 308 16, 314 52 C 319 84, 245 103, 162 105 C 79 107, 8 94, 5 56 C 2 20, 84 12, 158 7"
+              stroke="#0e1433"
+              strokeWidth="3"
+              strokeLinecap="round"
+              vectorEffect="non-scaling-stroke"
+            />
+            <path
+              d="M158 14 C 228 10, 300 21, 305 52 C 309 82, 240 97, 164 99 C 88 101, 15 90, 11 55 C 8 25, 86 18, 156 13"
+              stroke="#0e1433"
+              strokeWidth="2"
+              opacity="0.45"
+              strokeLinecap="round"
+              vectorEffect="non-scaling-stroke"
+            />
+          </svg>
+          <span className="relative block max-w-[290px] text-center font-hand text-[25px] leading-[1.15] text-ink sm:text-[28px]">
+            {text}
+          </span>
+        </span>
+      </div>
+    </div>
+  );
+}
+
 function SectionLabel({ children }: { children: ReactNode }) {
   return (
     <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">
@@ -125,7 +167,10 @@ export function Landing({
             bayar, dan depositnya jelas dari awal. Tidak ada tambahan diam-diam
             di akhir.
           </p>
-          <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+          <div className="mt-10 flex justify-center">
+            <CircledNote text="diantar ke hotel, villa, atau bandara" />
+          </div>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <a
               href="#armada"
               className="shadow-hard rounded-full bg-primary px-7 py-3.5 text-sm font-bold text-white transition hover:bg-primary-hover"
@@ -388,46 +433,71 @@ export function Landing({
       </section>
 
       {/* ================= CARA SEWA ================= */}
-      <section id="cara-sewa" className="mx-auto max-w-6xl scroll-mt-24 px-3 py-8 sm:px-5">
-        <div className="rounded-[2.5rem] bg-fog px-5 py-14 sm:px-10 sm:py-20">
-          <div className="max-w-2xl">
-            <SectionLabel>Cara sewa</SectionLabel>
-            <h2 className="mt-3 font-display text-4xl font-extrabold tracking-tight text-ink sm:text-5xl">
-              Begini kira-kira perjalanannya
-            </h2>
-            <p className="mt-4 leading-relaxed text-ink-muted">
-              Dari chat pertama sampai deposit kembali, semua lewat WhatsApp.
-              Tidak ada formulir panjang, tidak ada antre di garasi.
-            </p>
-          </div>
-          <ol className="mt-6">
-            {STEPS.map((step, i) => (
+      <section id="cara-sewa" className="mx-auto max-w-6xl scroll-mt-24 px-5 py-20 sm:px-8">
+        <div className="max-w-2xl">
+          <SectionLabel>Cara sewa</SectionLabel>
+          <h2 className="mt-3 font-display text-4xl font-extrabold tracking-tight text-ink sm:text-5xl">
+            Begini kira-kira perjalanannya.
+          </h2>
+          <p className="mt-4 leading-relaxed text-ink-muted">
+            Dari chat pertama sampai deposit kembali, semua lewat WhatsApp.
+            Tidak ada formulir panjang, tidak ada antre di garasi.
+          </p>
+        </div>
+        <ol className="mt-12 max-w-4xl">
+          {STEPS.map((step, i) => {
+            const last = i === STEPS.length - 1;
+            return (
               <li
                 key={step.title}
-                className="grid gap-3 border-t border-[#0e14331a] py-7 sm:grid-cols-[84px_1fr] lg:grid-cols-[110px_1fr_190px]"
+                className={`relative flex gap-4 sm:gap-6 ${last ? "" : "pb-6"}`}
               >
-                <p className="font-display text-[44px] font-extrabold leading-none text-primary">
-                  {String(i + 1).padStart(2, "0")}
-                </p>
-                <div>
-                  <h3 className="font-display text-xl font-extrabold text-ink">
-                    {step.title}
-                  </h3>
-                  <p className="mt-1.5 max-w-2xl leading-relaxed text-ink-muted">
+                {/* rel garis waktu */}
+                <div className="relative w-11 shrink-0 sm:w-14">
+                  {!last && (
+                    <span
+                      aria-hidden="true"
+                      className={
+                        i === 0
+                          ? "absolute bottom-0 left-1/2 top-11 w-[3px] -translate-x-1/2 bg-primary sm:top-14"
+                          : "absolute bottom-0 left-1/2 top-11 w-0 -translate-x-1/2 border-l-2 border-dashed border-ink/20 sm:top-14"
+                      }
+                    />
+                  )}
+                  <span
+                    className={`relative z-10 flex h-11 w-11 items-center justify-center rounded-full font-display text-lg font-extrabold sm:h-14 sm:w-14 sm:text-xl ${
+                      i === 0
+                        ? "bg-primary text-white"
+                        : "border-2 border-ink/20 bg-white text-ink"
+                    }`}
+                  >
+                    {i + 1}
+                  </span>
+                </div>
+                {/* kartu langkah */}
+                <div className="min-w-0 flex-1 rounded-2xl bg-fog p-5 sm:p-6">
+                  <div className="flex items-start justify-between gap-4">
+                    <h3 className="font-display text-xl font-extrabold text-ink">
+                      {step.title}
+                    </h3>
+                    <p className="-rotate-2 text-right font-hand text-[22px] leading-none text-ink-muted">
+                      {step.duration}
+                    </p>
+                  </div>
+                  <p className="mt-2 leading-relaxed text-ink-muted">
                     {step.text}
                   </p>
-                  <p className="mt-2 text-sm text-ink-muted">
-                    <span className="font-bold text-ink">Anda:</span>{" "}
+                  <p className="mt-3 text-sm text-ink-muted">
+                    <Marker>
+                      <span className="font-bold text-ink">Anda:</span>
+                    </Marker>{" "}
                     {step.yourPart}
                   </p>
                 </div>
-                <p className="font-mono text-xs font-medium text-ink-muted lg:pt-2 lg:text-right">
-                  {step.duration}
-                </p>
               </li>
-            ))}
-          </ol>
-        </div>
+            );
+          })}
+        </ol>
       </section>
 
       {/* ================= TESTIMONI ================= */}
@@ -544,7 +614,7 @@ export function Landing({
         <div className="bg-grid-dark relative overflow-hidden rounded-[2.5rem] bg-ink px-6 py-16 text-center text-white sm:py-20">
           <h2 className="mx-auto max-w-3xl font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">
             Ceritakan tanggal dan tujuan Anda, kami balas dengan{" "}
-            <span className="marker text-ink">harga final</span>.
+            <span className="marker-solid">harga final</span>.
           </h2>
           <p className="mx-auto mt-5 max-w-xl leading-relaxed text-white/70">
             Bukan perkiraan, bukan &ldquo;nanti dikabari&rdquo;. Ketersediaan,

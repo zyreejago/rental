@@ -90,6 +90,17 @@ body {
   -webkit-box-decoration-break: clone;
 }
 
+/* Stabilo penuh untuk di atas latar gelap: kuning menutup seluruh
+   tinggi huruf dan teks tinta tetap terbaca kontras */
+.marker-solid {
+  background-color: var(--color-marker);
+  color: var(--color-ink);
+  padding: 0 0.14em;
+  border-radius: 0.12em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
 /* Bayangan keras offset untuk tombol utama */
 .shadow-hard {
   box-shadow: 0 6px 0 rgba(14, 20, 51, 0.08);
