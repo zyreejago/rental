@@ -1,3 +1,4 @@
+import { UNIT_PHOTO } from "./unitPhoto";
 // Lapisan data lokal pengganti RPC server.
 //
 // Versi standalone dari "Manajer Rental Kendaraan Bali": tidak ada server,
@@ -151,7 +152,7 @@ interface Store {
   nextBookingId: number;
 }
 
-const STORAGE_KEY = "zeerental:store:v1";
+const STORAGE_KEY = "zeerental:store:v2";
 const ACTIVE_STATUSES: readonly string[] = [
   "menunggu",
   "terkonfirmasi",
@@ -186,7 +187,7 @@ function seedStore(): Store {
         depositWna: 2000000,
         status: "tersedia",
         cover: "mpv",
-        imageUrl: "",
+        imageUrl: UNIT_PHOTO,
         featured: true,
         notes: "Unit keluarga paling laris, servis rutin di bengkel resmi.",
       },
@@ -206,7 +207,7 @@ function seedStore(): Store {
         depositWna: 1500000,
         status: "tersedia",
         cover: "city",
-        imageUrl: "",
+        imageUrl: UNIT_PHOTO,
         featured: false,
         notes: "",
       },
@@ -226,7 +227,7 @@ function seedStore(): Store {
         depositWna: 3000000,
         status: "tersedia",
         cover: "mpv",
-        imageUrl: "",
+        imageUrl: UNIT_PHOTO,
         featured: true,
         notes: "Favorit untuk tur keluarga dengan sopir.",
       },
@@ -246,7 +247,7 @@ function seedStore(): Store {
         depositWna: 5000000,
         status: "perawatan",
         cover: "suv",
-        imageUrl: "",
+        imageUrl: UNIT_PHOTO,
         featured: false,
         notes: "Sedang servis berkala, estimasi selesai 24 Okt 2026.",
       },
@@ -266,7 +267,7 @@ function seedStore(): Store {
         depositWna: 1000000,
         status: "tersedia",
         cover: "skuter",
-        imageUrl: "",
+        imageUrl: UNIT_PHOTO,
         featured: false,
         notes: "",
       },
@@ -286,7 +287,7 @@ function seedStore(): Store {
         depositWna: 1500000,
         status: "tersedia",
         cover: "skuter",
-        imageUrl: "",
+        imageUrl: UNIT_PHOTO,
         featured: true,
         notes: "Sudah termasuk dua helm dan jas hujan.",
       },
@@ -306,7 +307,7 @@ function seedStore(): Store {
         depositWna: 1000000,
         status: "tersedia",
         cover: "skuter",
-        imageUrl: "",
+        imageUrl: UNIT_PHOTO,
         featured: false,
         notes: "",
       },
@@ -326,7 +327,7 @@ function seedStore(): Store {
         depositWna: 1000000,
         status: "nonaktif",
         cover: "city",
-        imageUrl: "",
+        imageUrl: UNIT_PHOTO,
         featured: false,
         notes: "Unit lama, dijual bertahap.",
       },
